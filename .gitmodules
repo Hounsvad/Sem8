@@ -1,0 +1,3 @@
+[submodule "ModelDriven/repo"]
+	path = ModelDriven/repo
+	url = git@github.com:ulrikpaghschultz/MDSD.git
