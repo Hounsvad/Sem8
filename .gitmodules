@@ -1,3 +1,6 @@
 [submodule "ModelDriven/repo"]
 	path = ModelDriven/repo
 	url = git@github.com:ulrikpaghschultz/MDSD.git
+[submodule "SemPro"]
+	path = SemPro
+	url = git@github.com:devantler/software-engineering-f22.git
