@@ -2,30 +2,44 @@ grammar dk.sdu.mmmi.mdsd.Math with org.eclipse.xtext.common.Terminals
 
 generate math "http://www.sdu.dk/mmmi/mdsd/Math"
 
-MathExp:
-	'var' name=ID '=' exp=Exp
+Variables:
+	variableAssignments+=VariableAssignment+
 ;
 
-Exp: // Illegal due to left recursion
-	left=Number (operator=ExpOp right=Exp)?
+VariableAssignment returns Variable: //Serves as a basis to retain results and to be the basis for lines in the dsl
+	'var' name=ID '=' ref=Exp
 ;
 
-ExpOp:
-	{Plus} '+' | {Minus} '-'	 | {Mult} '*' | {Div} '/'	
+Exp returns Expression: //Addition and subtraction - Can boil down to MultDiv 
+	MultDiv (('+' {Plus.left=current}| '-' {Minus.left=current}) right=MultDiv)*
 ;
 
-Primary:
-	Number | Parenthesis | VariableUse
+MultDiv returns Expression: //Multiplication and devision - Can boil down to MultDiv
+	Primary (('*' {Multiplication.left=current}| '/' {Division.left=current}) right=Primary)*
 ;
 
-Parenthesis:
-	'(' exp=Exp ')'
+Primary returns Expression: //Numbers and things that should be computed down to numbers before use
+	Number | Parenthesis | VariableUse | LetStatement
 ;
 
-Number:
-	value=INT
+Parenthesis returns Expression: //Serves to support the use of parentheses as a base
+	{Parenthesis} '(' exp=Exp ')'
 ;
 
-VariableUse:
-	ref = [MathExp]
+Number returns Expression: //A basic number
+	{ExplicitNumber} value=INT
 ;
+
+VariableUse: //Using a previously defined variable
+	{VarUse} ref=[Variable]
+;
+
+LetStatement returns Variable: //This is kind of like a using statement, where an alias is made for an expression or simmilar that only exists in the body of the let statement
+	{Let} 'let' name=ID '=' exp=Exp 'in' body=Exp 'end'
+;
+
+
+
+//ExpOp:
+//	{Plus} '+' | {Minus} '-' | {Mult} '*' | {Div} '/'	
+//;
