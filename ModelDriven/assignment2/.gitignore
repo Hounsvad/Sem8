@@ -1,0 +1,6 @@
+**/src-gen/*
+**/xtext-gen/*
+**/xtend-gen/*
+**/bin/
+
+!.gitkeep
