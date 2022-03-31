@@ -11,10 +11,12 @@
     </genClasses>
     <genClasses ecoreClass="Math.ecore#//Variable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Math.ecore#//Variable/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Variable/ref"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Variable/exp"/>
     </genClasses>
     <genClasses ecoreClass="Math.ecore#//Expression"/>
     <genClasses ecoreClass="Math.ecore#//VariableUse"/>
+    <genClasses ecoreClass="Math.ecore#//LocalAssignment"/>
+    <genClasses ecoreClass="Math.ecore#//VariableAssignment"/>
     <genClasses ecoreClass="Math.ecore#//Plus">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Plus/left"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Plus/right"/>
@@ -40,9 +42,10 @@
     <genClasses ecoreClass="Math.ecore#//VarUse">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Math.ecore#//VarUse/ref"/>
     </genClasses>
-    <genClasses ecoreClass="Math.ecore#//Let">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Let/exp"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Let/body"/>
+    <genClasses ecoreClass="Math.ecore#//Assignment"/>
+    <genClasses ecoreClass="Math.ecore#//Local">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Local/assignment"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Math.ecore#//Local/exp"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

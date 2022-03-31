@@ -4,10 +4,15 @@
 package dk.sdu.mmmi.mdsd.generator
 
 import dk.sdu.mmmi.mdsd.math.Division
+import dk.sdu.mmmi.mdsd.math.ExplicitNumber
+import dk.sdu.mmmi.mdsd.math.Expression
 import dk.sdu.mmmi.mdsd.math.Minus
 import dk.sdu.mmmi.mdsd.math.Multiplication
+import dk.sdu.mmmi.mdsd.math.Parenthesis
 import dk.sdu.mmmi.mdsd.math.Plus
-import dk.sdu.mmmi.mdsd.math.Expression
+import dk.sdu.mmmi.mdsd.math.VarUse
+import dk.sdu.mmmi.mdsd.math.Variable
+import dk.sdu.mmmi.mdsd.math.Variables
 import java.util.HashMap
 import java.util.Map
 import javax.swing.JOptionPane
@@ -15,12 +20,8 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import dk.sdu.mmmi.mdsd.math.ExplicitNumber
-import dk.sdu.mmmi.mdsd.math.Let
-import dk.sdu.mmmi.mdsd.math.VarUse
-import dk.sdu.mmmi.mdsd.math.Variables
-import dk.sdu.mmmi.mdsd.math.Parenthesis
-import dk.sdu.mmmi.mdsd.math.Variable
+import dk.sdu.mmmi.mdsd.math.VariableAssignment
+import dk.sdu.mmmi.mdsd.math.Local
 
 /**
  * Generates code from your model files on save.
@@ -33,68 +34,65 @@ class MathGenerator extends AbstractGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		val lines = resource.allContents.filter(Variables).next
-		//lines.printInterpretedExpressions
 		val result = lines.compute
 		
 		// You can replace with hovering, see Bettini Chapter 8
 		result.displayPanel
 	}
-		
-	def void printInterpretedExpressions(Variables variables){
-		for (varass : variables.getVariableAssignments()){
-			displayExpression(varass)
-		}
-	}
-	
-	//
-	// Compute function: computes value of expression
-	// Note: written according to illegal left-recursive grammar, requires fix
-	//
 	
 	def static Map<String, Integer> compute(Variables math){
 		var values = new HashMap<String, Integer>
 		for (varass : math.getVariableAssignments()) {
-			values.put(varass.getName(), computeIndividual(varass, values))
+			values.put(varass.getName(), ComputeExp(varass, values))
 		}
-		values
+		return values
 	}
-	
-	def static int computeIndividual(Variable varAss, Map<String, Integer> environment) { 
-		varAss.ref.computeExp(environment)
+
+	//Plus
+	def static dispatch Integer ComputeExp(Plus exp, Map<String, Integer> env) {
+		return exp.left.ComputeExp(env) + exp.right.ComputeExp(env)
 	}
-	
-	def static int computeExp(Expression exp, Map<String, Integer> env) {
-		switch exp {
-			Plus: exp.left.computeExp(env)+exp.right.computeExp(env)
-			Minus: exp.left.computeExp(env)-exp.right.computeExp(env)
-			Multiplication: exp.left.computeExp(env)*exp.right.computeExp(env)
-			Division: exp.left.computeExp(env)/exp.right.computeExp(env)
-			ExplicitNumber: exp.value
-			Parenthesis: exp.getExp.computeExp(env)
-			VarUse: env.getOrDefault(exp.ref.name, exp.ref.computeExp(env))
-			Let: {
-				if(env.get(exp.name) == null)
-					computeExp(exp.getBody(), generateLetEnv(env, exp.getName(), exp.getExp().computeExp(env)))
-				else
-					env.get(exp.name)
-			}
-			Variable: env.getOrDefault(exp.name, exp.ref.computeExp(env))
-			default: throw new Error("Invalid Expression: " + exp)
-		}
+	//Minus
+	def static dispatch Integer ComputeExp(Minus exp, Map<String, Integer> env) {
+		return exp.left.ComputeExp(env) - exp.right.ComputeExp(env)
 	}
+	//Multiplication
+	def static dispatch Integer ComputeExp(Multiplication exp, Map<String, Integer> env) {
+		return exp.left.ComputeExp(env) * exp.right.ComputeExp(env)
+	}
+	//Division
+	def static dispatch Integer ComputeExp(Division exp, Map<String, Integer> env) {
+		return exp.left.ComputeExp(env) / exp.right.ComputeExp(env)
+	}
+	//ExplicitNumber
+	def static dispatch Integer ComputeExp(ExplicitNumber exp, Map<String, Integer> env) {
+		return exp.value
+	}
+	//Parenthesis
+	def static dispatch Integer ComputeExp(Parenthesis exp, Map<String, Integer> env) {
+		return exp.getExp.ComputeExp(env)
+	}
+	//VarUse
+	def static dispatch Integer ComputeExp(VarUse exp, Map<String, Integer> env) {
+		return env.getOrDefault(exp.ref.name, exp.ref.ComputeExp(env))
+	}
+	//Let
+	def static dispatch Integer ComputeExp(Local exp, Map<String, Integer> env) { //Let
+		return env.getOrDefault(exp.assignment.name, ComputeExp(exp.exp, generateLocalEnv(env, exp.assignment.name, exp.assignment.exp.ComputeExp(env))));
+	}
+	//Variable
+	def static dispatch Integer ComputeExp(Variable exp, Map<String, Integer> env) {
+		return env.getOrDefault(exp.name, exp.exp.ComputeExp(env))
+	}	
 	
-	static def Map<String, Integer> generateLetEnv (Map<String, Integer> givenEnvironment, String letVarName, int bodyValue){
+	static def Map<String, Integer> generateLocalEnv (Map<String, Integer> givenEnvironment, String localVarName, int bodyValue){
 		val newEnvironment = new HashMap<String, Integer>(givenEnvironment)
 		
-		newEnvironment.put(letVarName, bodyValue)
-		print("Letvar: "+letVarName+" Value: " + bodyValue + "\n")
-		newEnvironment
+		newEnvironment.put(localVarName, bodyValue)
+		print("Localvar: "+localVarName+" Value: " + bodyValue + "\n")
+		return newEnvironment
 	}
 	
-//	def static int computePrim(Primary factor) { 
-//		87
-//	}
-
 	def void displayPanel(Map<String, Integer> result) {
 		var resultString = ""
 		for (entry : result.entrySet()) {
@@ -103,24 +101,4 @@ class MathGenerator extends AbstractGenerator {
 		
 		JOptionPane.showMessageDialog(null, resultString ,"Math Language", JOptionPane.INFORMATION_MESSAGE)
 	}
-	
-	def displayExpression(Variable varAss){
-		print(varAss.ref.getExpressionString + "\n")
-	}
-	
-	def String getExpressionString(Expression exp){
-		switch exp {
-			Plus: exp.left.getExpressionString +"+"+exp.right.getExpressionString
-			Minus: exp.left.getExpressionString+"-"+exp.right.getExpressionString
-			Multiplication: exp.left.getExpressionString+"*"+exp.right.getExpressionString
-			Division: exp.left.getExpressionString+"/"+exp.right.getExpressionString
-			ExplicitNumber: Integer.toString(exp.value)
-			Parenthesis: exp.getExp.getExpressionString
-			Let: '''let «exp.name» = «exp.exp.getExpressionString» in «exp.body.getExpressionString»'''
-			VarUse: exp.ref.getExpressionString
-			Variable: exp.getName()
-			default: throw new Error("Invalid Expression: " + exp)
-		}
-	}
-
 }

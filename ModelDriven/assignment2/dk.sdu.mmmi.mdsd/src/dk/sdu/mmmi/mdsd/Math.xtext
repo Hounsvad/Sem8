@@ -7,7 +7,7 @@ Variables:
 ;
 
 VariableAssignment returns Variable: //Serves as a basis to retain results and to be the basis for lines in the dsl
-	'var' name=ID '=' ref=Exp
+	{VariableAssignment} 'var' name=ID '=' exp=Exp
 ;
 
 Exp returns Expression: //Addition and subtraction - Can boil down to MultDiv 
@@ -19,7 +19,7 @@ MultDiv returns Expression: //Multiplication and devision - Can boil down to Mul
 ;
 
 Primary returns Expression: //Numbers and things that should be computed down to numbers before use
-	Number | Parenthesis | VariableUse | LetStatement
+	Number | Parenthesis | VariableUse | LocalAssignment
 ;
 
 Parenthesis returns Expression: //Serves to support the use of parentheses as a base
@@ -34,12 +34,11 @@ VariableUse: //Using a previously defined variable
 	{VarUse} ref=[Variable]
 ;
 
-LetStatement returns Variable: //This is kind of like a using statement, where an alias is made for an expression or simmilar that only exists in the body of the let statement
-	{Let} 'let' name=ID '=' exp=Exp 'in' body=Exp 'end'
+Assignment returns Variable:
+	{Assignment} name=ID '=' exp=Exp
 ;
 
+LocalAssignment: //This is kind of like a using statement, where an alias is made for an expression or simmilar that only exists in the body of the let statement
+	{Local} 'let' assignment=Assignment 'in' exp=Exp 'end'
+;
 
-
-//ExpOp:
-//	{Plus} '+' | {Minus} '-' | {Mult} '*' | {Div} '/'	
-//;

@@ -5,13 +5,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="variableAssignments" upperBound="-1"
         eType="#//Variable" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Variable" eSuperTypes="#//Expression">
+  <eClassifiers xsi:type="ecore:EClass" name="Variable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Expression"/>
   <eClassifiers xsi:type="ecore:EClass" name="VariableUse" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LocalAssignment" eSuperTypes="#//Expression"/>
+  <eClassifiers xsi:type="ecore:EClass" name="VariableAssignment" eSuperTypes="#//Variable"/>
   <eClassifiers xsi:type="ecore:EClass" name="Plus" eSuperTypes="#//Expression">
     <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//Expression"
         containment="true"/>
@@ -46,10 +48,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="VarUse" eSuperTypes="#//VariableUse">
     <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//Variable"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Let" eSuperTypes="#//Variable">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
+  <eClassifiers xsi:type="ecore:EClass" name="Assignment" eSuperTypes="#//Variable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Local" eSuperTypes="#//LocalAssignment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignment" eType="#//Variable"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="#//Expression"
         containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
