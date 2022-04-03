@@ -3,6 +3,22 @@
  */
 package dk.sdu.mmmi.mdsd.scoping
 
+import dk.sdu.mmmi.mdsd.math.Local
+import dk.sdu.mmmi.mdsd.math.VarUse
+import dk.sdu.mmmi.mdsd.math.Variable
+import dk.sdu.mmmi.mdsd.math.VariableAssignment
+import dk.sdu.mmmi.mdsd.math.Variables
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.scoping.IScope
+import org.eclipse.xtext.scoping.Scopes
+import java.util.ArrayList
+import java.util.Collections
+import java.util.stream.Stream
 
 /**
  * This class contains custom scoping description.
@@ -12,4 +28,39 @@ package dk.sdu.mmmi.mdsd.scoping
  */
 class MathScopeProvider extends AbstractMathScopeProvider {
 
+	override IScope getScope(EObject context, EReference reference){
+		var scope = super.getScope(context, reference)
+		if(context instanceof VarUse){
+			val root = EcoreUtil2.getRootContainer(context);
+			val kropnyf = 1
+			val List<Variable> candidates = new ArrayList();
+			//Get all variableAssignments
+			for(VariableAssignment assignment: EcoreUtil2.getAllContentsOfType(root, VariableAssignment)){
+				candidates.add(assignment as Variable)
+			}
+			
+			//Should generate a list of all variables that are not let (ie the var difinitions that are global)
+			val List<Variable> variableAssignments = candidates
+			.filter(variable | variable.eContainer !== EcoreUtil2.getContainerOfType(context, Variables))
+			.toList()
+			
+			val List<Variable> returnAssignments = new ArrayList(variableAssignments);
+			
+			//Get 
+			val letDefinition = EcoreUtil2.getContainerOfType(context, Local)
+			if(letDefinition !== null){
+				returnAssignments.addLetDefinition(candidates, letDefinition)
+			}
+			return Scopes.scopeFor(returnAssignments)
+			
+		}
+		return scope;
+	}
+	protected def void addLetDefinition(List<Variable> returnCandidates, List<Variable> candidates, Local letDefinition ){
+		returnCandidates.add(candidates.findFirst(variable | variable.eContainer === letDefinition))
+		val newLetDefinition = EcoreUtil2.getContainerOfType(letDefinition.eContainer, Local)
+		if(newLetDefinition !== null){
+			returnCandidates.addLetDefinition(candidates, newLetDefinition)
+		}
+	}
 }
