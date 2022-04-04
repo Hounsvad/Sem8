@@ -36,62 +36,53 @@ class MathGenerator extends AbstractGenerator {
 		val lines = resource.allContents.filter(Variables).next
 		val result = lines.compute
 		
-		// You can replace with hovering, see Bettini Chapter 8
 		result.displayPanel
 	}
 	
 	def static Map<String, Integer> compute(Variables math){
 		var values = new HashMap<String, Integer>
 		for (varass : math.getVariableAssignments()) {
-			values.put(varass.getName(), ComputeExp(varass, values))
+			values.put(varass.getName(), ComputeExp(varass))
 		}
 		return values
 	}
 
 	//Plus
-	def static dispatch Integer ComputeExp(Plus exp, Map<String, Integer> env) {
-		return exp.left.ComputeExp(env) + exp.right.ComputeExp(env)
+	def static dispatch Integer ComputeExp(Plus exp) {
+		return exp.left.ComputeExp() + exp.right.ComputeExp()
 	}
 	//Minus
-	def static dispatch Integer ComputeExp(Minus exp, Map<String, Integer> env) {
-		return exp.left.ComputeExp(env) - exp.right.ComputeExp(env)
+	def static dispatch Integer ComputeExp(Minus exp) {
+		return exp.left.ComputeExp() - exp.right.ComputeExp()
 	}
 	//Multiplication
-	def static dispatch Integer ComputeExp(Multiplication exp, Map<String, Integer> env) {
-		return exp.left.ComputeExp(env) * exp.right.ComputeExp(env)
+	def static dispatch Integer ComputeExp(Multiplication exp) {
+		return exp.left.ComputeExp() * exp.right.ComputeExp()
 	}
 	//Division
-	def static dispatch Integer ComputeExp(Division exp, Map<String, Integer> env) {
-		return exp.left.ComputeExp(env) / exp.right.ComputeExp(env)
+	def static dispatch Integer ComputeExp(Division exp) {
+		return exp.left.ComputeExp() / exp.right.ComputeExp()
 	}
 	//ExplicitNumber
-	def static dispatch Integer ComputeExp(ExplicitNumber exp, Map<String, Integer> env) {
+	def static dispatch Integer ComputeExp(ExplicitNumber exp) {
 		return exp.value
 	}
 	//Parenthesis
-	def static dispatch Integer ComputeExp(Parenthesis exp, Map<String, Integer> env) {
-		return exp.getExp.ComputeExp(env)
+	def static dispatch Integer ComputeExp(Parenthesis exp) {
+		return exp.getExp.ComputeExp()
 	}
 	//VarUse
-	def static dispatch Integer ComputeExp(VarUse exp, Map<String, Integer> env) {
-		return env.getOrDefault(exp.ref.name, exp.ref.ComputeExp(env))
+	def static dispatch Integer ComputeExp(VarUse exp) {
+		return exp.ref.ComputeExp()
 	}
 	//Let
-	def static dispatch Integer ComputeExp(Local exp, Map<String, Integer> env) { //Let
-		return env.getOrDefault(exp.assignment.name, ComputeExp(exp.exp, generateLocalEnv(env, exp.assignment.name, exp.assignment.exp.ComputeExp(env))));
+	def static dispatch Integer ComputeExp(Local exp) { //Let
+		return exp.exp.ComputeExp()
 	}
 	//Variable
-	def static dispatch Integer ComputeExp(Variable exp, Map<String, Integer> env) {
-		return env.getOrDefault(exp.name, exp.exp.ComputeExp(env))
+	def static dispatch Integer ComputeExp(Variable exp) {
+		return exp.exp.ComputeExp()
 	}	
-	
-	static def Map<String, Integer> generateLocalEnv (Map<String, Integer> givenEnvironment, String localVarName, int bodyValue){
-		val newEnvironment = new HashMap<String, Integer>(givenEnvironment)
-		
-		newEnvironment.put(localVarName, bodyValue)
-		print("Localvar: "+localVarName+" Value: " + bodyValue + "\n")
-		return newEnvironment
-	}
 	
 	def void displayPanel(Map<String, Integer> result) {
 		var resultString = ""

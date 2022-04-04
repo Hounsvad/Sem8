@@ -5,6 +5,7 @@ package dk.sdu.mmmi.mdsd.validation
 
 import dk.sdu.mmmi.mdsd.math.*
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.validation.Check
 
 /**
  * This class contains custom validation rules. 
@@ -25,11 +26,13 @@ class MathValidator extends AbstractMathValidator {
 //	}
 
 	public static val DUPLICATE_NAME = 'duplicateName'
-
+	
+	@Check
 	def GlobalVarDuplicate(VariableAssignment varAss){
 		var base = EcoreUtil2.getContainerOfType(varAss, Variables)
-		if(base.variableAssignments.filter[it !== varAss && it.name == varAss.name ].size > 0){
-			error('Global variables cannot be assigned with the same name', MathPackage.Literals.VARIABLES__VARIABLE_ASSIGNMENTS, DUPLICATE_NAME)
+		if(base.variableAssignments.filter[it !== varAss && it.name == varAss.name ].toList.size > 0){
+			println("Should have err")
+			error('Global variables cannot be assigned with the same name', MathPackage.Literals.VARIABLE__NAME, DUPLICATE_NAME)
 		}
 	}
 	
