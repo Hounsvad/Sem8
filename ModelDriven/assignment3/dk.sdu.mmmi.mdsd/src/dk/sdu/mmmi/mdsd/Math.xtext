@@ -1,0 +1,60 @@
+grammar dk.sdu.mmmi.mdsd.Math with org.eclipse.xtext.common.Terminals
+
+generate math "http://www.sdu.dk/mmmi/mdsd/Math"
+
+Program:
+	programName=ProgramName externals+=External* variableAssignments+=VariableAssignment+
+;
+
+ProgramName returns ProgramName: 
+	'program' name=ID
+;
+
+External: 
+	{External} 'external' name=ID '(' parameters+=ID? (',' parameters+=ID)* ')'
+;
+
+ExternalUse returns Expression:
+	{ExternalUse} ref=[External] '(' exp+=Exp? (',' exp+=Exp)* ')'
+;
+
+//Variables:
+//	variableAssignments+=VariableAssignment+
+//;
+
+VariableAssignment returns Variable: //Serves as a basis to retain results and to be the basis for lines in the dsl
+	{VariableAssignment} 'var' name=ID '=' exp=Exp
+;
+
+Exp returns Expression: //Addition and subtraction - Can boil down to MultDiv 
+	MultDiv (('+' {Plus.left=current}| '-' {Minus.left=current}) right=MultDiv)*
+;
+
+MultDiv returns Expression: //Multiplication and devision - Can boil down to MultDiv
+	Primary (('*' {Multiplication.left=current}| '/' {Division.left=current}) right=Primary)*
+;
+
+Primary returns Expression: //Numbers and things that should be computed down to numbers before use
+	Number | Parenthesis | VariableUse | LocalAssignment | ExternalUse
+;
+
+Parenthesis returns Expression: //Serves to support the use of parentheses as a base
+	{Parenthesis} '(' exp=Exp ')'
+;
+
+Number returns Expression: //A basic number
+	{ExplicitNumber} value=INT
+;
+
+VariableUse: //Using a previously defined variable
+	{VarUse} ref=[Variable]
+;
+
+Assignment returns Variable:
+	{Assignment} name=ID '=' exp=Exp
+;
+
+LocalAssignment: //This is kind of like a using statement, where an alias is made for an expression or simmilar that only exists in the body of the let statement
+	{Local} 'let' assignment=Assignment 'in' exp=Exp 'end'
+;
+
