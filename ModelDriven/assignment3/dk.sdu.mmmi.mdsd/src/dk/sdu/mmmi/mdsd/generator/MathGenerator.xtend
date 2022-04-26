@@ -25,6 +25,7 @@ import dk.sdu.mmmi.mdsd.math.Program
 import org.eclipse.emf.common.util.EList
 import dk.sdu.mmmi.mdsd.math.External
 import java.util.ArrayList
+import java.util.List
 
 /**
  * Generates code from your model files on save.
@@ -72,7 +73,7 @@ class MathGenerator extends AbstractGenerator {
 	
 	def getVariableInstantiations(Program program){
 		var vars = program.variableAssignments
-		vars.compute() 
+		var computedVars = vars.compute() 
 	}
 	
 	def getExternalInterface(Program program) {
@@ -115,57 +116,57 @@ class MathGenerator extends AbstractGenerator {
 		'''
 	}
 
-	def EList<String> compute(EList<Variable> variables) {
+	def List<String> compute(EList<Variable> variables) {
 		var values = new ArrayList<String>();
 		
 		for (varass : variables) {
-			values.append(ComputeExp(varass))
+			values.add(ComputeExp(varass))
 		}
 		return values
 	}
 
 	// Plus
 	def static dispatch String ComputeExp(Plus exp) {
-		return exp.left.ComputeExp() + exp.right.ComputeExp()
+		return '''(«exp.left.ComputeExp()» + «exp.right.ComputeExp()»)'''
 	}
 
 	// Minus
 	def static dispatch String ComputeExp(Minus exp) {
-		return exp.left.ComputeExp() - exp.right.ComputeExp()
+		return '''(«exp.left.ComputeExp()» - «exp.right.ComputeExp()»)'''
 	}
 
 	// Multiplication
 	def static dispatch String ComputeExp(Multiplication exp) {
-		return exp.left.ComputeExp() * exp.right.ComputeExp()
+		return '''(«exp.left.ComputeExp()» * «exp.right.ComputeExp()»)'''
 	}
 
 	// Division
 	def static dispatch String ComputeExp(Division exp) {
-		return exp.left.ComputeExp() / exp.right.ComputeExp()
+		return '''(«exp.left.ComputeExp()» / «exp.right.ComputeExp()»)'''
 	}
 
 	// ExplicitNumber
 	def static dispatch String ComputeExp(ExplicitNumber exp) {
-		return exp.value
+		return '''(«exp.value»)'''
 	}
 
 	// Parenthesis
 	def static dispatch String ComputeExp(Parenthesis exp) {
-		return exp.getExp.ComputeExp()
+		return '''(«exp.getExp.ComputeExp()»)'''
 	}
 
 	// VarUse
 	def static dispatch String ComputeExp(VarUse exp) {
-		return exp.ref.ComputeExp()
+		return '''(«exp.ref.ComputeExp()»)'''
 	}
 
 	// Let
 	def static dispatch String ComputeExp(Local exp) { // Let
-		return exp.exp.ComputeExp()
+		return '''(«exp.exp.ComputeExp()»)'''
 	}
 
 	// Variable
 	def static dispatch String ComputeExp(Variable exp) {
-		return exp.exp.ComputeExp()
+		return '''(«exp.exp.ComputeExp()»)'''
 	}
 }

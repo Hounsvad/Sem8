@@ -15,8 +15,10 @@ import dk.sdu.mmmi.mdsd.math.Plus;
 import dk.sdu.mmmi.mdsd.math.Program;
 import dk.sdu.mmmi.mdsd.math.VarUse;
 import dk.sdu.mmmi.mdsd.math.Variable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -97,8 +99,7 @@ public class MathGenerator extends AbstractGenerator {
     _builder.append("public void compute(){");
     _builder.newLine();
     _builder.append("\t\t");
-    EList<String> _variableInstantiations = this.getVariableInstantiations(program);
-    _builder.append(_variableInstantiations, "\t\t");
+    this.getVariableInstantiations(program);
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     _builder.append("}");
@@ -112,13 +113,9 @@ public class MathGenerator extends AbstractGenerator {
     return contents;
   }
   
-  public EList<String> getVariableInstantiations(final Program program) {
-    EList<String> _xblockexpression = null;
-    {
-      EList<Variable> vars = program.getVariableAssignments();
-      _xblockexpression = this.compute(vars);
-    }
-    return _xblockexpression;
+  public void getVariableInstantiations(final Program program) {
+    EList<Variable> vars = program.getVariableAssignments();
+    List<String> computedVars = this.compute(vars);
   }
   
   public String getExternalInterface(final Program program) {
@@ -190,52 +187,105 @@ public class MathGenerator extends AbstractGenerator {
     return _builder.toString();
   }
   
-  public EList<String> compute(final EList<Variable> variables) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method append(String) is undefined for the type ArrayList<String>"
-      + "\nType mismatch: cannot convert from ArrayList<String> to EList<String>");
+  public List<String> compute(final EList<Variable> variables) {
+    ArrayList<String> values = new ArrayList<String>();
+    for (final Variable varass : variables) {
+      values.add(MathGenerator.ComputeExp(varass));
+    }
+    return values;
   }
   
   protected static String _ComputeExp(final Plus exp) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
     String _ComputeExp = MathGenerator.ComputeExp(exp.getLeft());
+    _builder.append(_ComputeExp);
+    _builder.append(" + ");
     String _ComputeExp_1 = MathGenerator.ComputeExp(exp.getRight());
-    return (_ComputeExp + _ComputeExp_1);
+    _builder.append(_ComputeExp_1);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final Minus exp) {
-    throw new Error("Unresolved compilation problems:"
-      + "\n- cannot be resolved.");
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getLeft());
+    _builder.append(_ComputeExp);
+    _builder.append(" - ");
+    String _ComputeExp_1 = MathGenerator.ComputeExp(exp.getRight());
+    _builder.append(_ComputeExp_1);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final Multiplication exp) {
-    throw new Error("Unresolved compilation problems:"
-      + "\n* cannot be resolved.");
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getLeft());
+    _builder.append(_ComputeExp);
+    _builder.append(" * ");
+    String _ComputeExp_1 = MathGenerator.ComputeExp(exp.getRight());
+    _builder.append(_ComputeExp_1);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final Division exp) {
-    throw new Error("Unresolved compilation problems:"
-      + "\n/ cannot be resolved.");
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getLeft());
+    _builder.append(_ComputeExp);
+    _builder.append(" / ");
+    String _ComputeExp_1 = MathGenerator.ComputeExp(exp.getRight());
+    _builder.append(_ComputeExp_1);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final ExplicitNumber exp) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nType mismatch: cannot convert from int to String");
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    int _value = exp.getValue();
+    _builder.append(_value);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final Parenthesis exp) {
-    return MathGenerator.ComputeExp(exp.getExp());
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getExp());
+    _builder.append(_ComputeExp);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final VarUse exp) {
-    return MathGenerator.ComputeExp(exp.getRef());
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getRef());
+    _builder.append(_ComputeExp);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final Local exp) {
-    return MathGenerator.ComputeExp(exp.getExp());
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getExp());
+    _builder.append(_ComputeExp);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   protected static String _ComputeExp(final Variable exp) {
-    return MathGenerator.ComputeExp(exp.getExp());
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("(");
+    String _ComputeExp = MathGenerator.ComputeExp(exp.getExp());
+    _builder.append(_ComputeExp);
+    _builder.append(")");
+    return _builder.toString();
   }
   
   public static String ComputeExp(final EObject exp) {

@@ -1351,3 +1351,133 @@ Binding(ALT+SHIFT+R,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.ui.contexts.window,,,system)
+!SESSION 2022-04-26 11:54:37.767 -----------------------------------------------
+eclipse.buildId=4.23.0.I20220308-0310
+java.version=17.0.2
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.platform.ide
+Command-line arguments:  -product org.eclipse.platform.ide -data /home/frederik/Programming/sem8/ModelDriven/assignment3/../runtime-EclipseXtext -dev file:/home/frederik/Programming/sem8/ModelDriven/assignment3/.metadata/.plugins/org.eclipse.pde.core/Launch Runtime Eclipse/dev.properties -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.jface 2 0 2022-04-26 11:54:42.373
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2022-04-26 11:54:42.373
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@55c20a91,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@4a3516fd,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+!SUBENTRY 1 org.eclipse.jface 2 0 2022-04-26 11:54:42.373
+!MESSAGE A conflict occurred for ALT+SHIFT+R:
+Binding(ALT+SHIFT+R,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@3ba96967,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(ALT+SHIFT+R,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.rename,Rename,
+		Rename the selected item,
+		Category(org.eclipse.ui.category.file,File,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5764d421,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.apache.log4j 4 0 2022-04-26 11:58:43.723
+!MESSAGE org.eclipse.xtext.builder.BuilderParticipant  - Error during compilation of 'platform:/resource/math_expression/src/test34.math'.
+
+!STACK 0
+java.lang.IllegalArgumentException: Unhandled parameter types: [dk.sdu.mmmi.mdsd.math.impl.ExternalUseImpl@1939f507]
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:311)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator._ComputeExp(MathGenerator.java:276)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:293)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator._ComputeExp(MathGenerator.java:276)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:293)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator._ComputeExp(MathGenerator.java:285)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:309)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.compute(MathGenerator.java:193)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.getVariableInstantiations(MathGenerator.java:118)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.getMathClass(MathGenerator.java:102)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.doGenerate(MathGenerator.java:46)
+	at org.eclipse.xtext.generator.GeneratorDelegate.doGenerate(GeneratorDelegate.java:44)
+	at org.eclipse.xtext.generator.GeneratorDelegate.generate(GeneratorDelegate.java:35)
+	at org.eclipse.xtext.builder.BuilderParticipant.handleChangedContents(BuilderParticipant.java:597)
+	at org.eclipse.xtext.builder.BuilderParticipant.handleChangedContents(BuilderParticipant.java:578)
+	at org.eclipse.xtext.builder.BuilderParticipant.doGenerate(BuilderParticipant.java:563)
+	at org.eclipse.xtext.builder.BuilderParticipant.doBuild(BuilderParticipant.java:303)
+	at org.eclipse.xtext.builder.BuilderParticipant.build(BuilderParticipant.java:265)
+	at org.eclipse.xtext.builder.impl.RegistryBuilderParticipant$DeferredBuilderParticipant.build(RegistryBuilderParticipant.java:164)
+	at org.eclipse.xtext.builder.impl.RegistryBuilderParticipant.build(RegistryBuilderParticipant.java:70)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.doBuild(XtextBuilder.java:519)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.addInfosFromTaskAndBuild(XtextBuilder.java:449)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.incrementalBuild(XtextBuilder.java:430)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.build(XtextBuilder.java:333)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:232)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:281)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:334)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:337)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:392)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:417)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:161)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:255)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.apache.log4j 4 0 2022-04-26 11:58:44.932
+!MESSAGE org.eclipse.xtext.builder.BuilderParticipant  - Error during compilation of 'platform:/resource/math_expression/src/test34.math'.
+
+!STACK 0
+java.lang.IllegalArgumentException: Unhandled parameter types: [dk.sdu.mmmi.mdsd.math.impl.ExternalUseImpl@4d9e1322]
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:311)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator._ComputeExp(MathGenerator.java:276)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:293)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator._ComputeExp(MathGenerator.java:276)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:293)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator._ComputeExp(MathGenerator.java:285)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.ComputeExp(MathGenerator.java:309)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.compute(MathGenerator.java:193)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.getVariableInstantiations(MathGenerator.java:118)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.getMathClass(MathGenerator.java:102)
+	at dk.sdu.mmmi.mdsd.generator.MathGenerator.doGenerate(MathGenerator.java:46)
+	at org.eclipse.xtext.generator.GeneratorDelegate.doGenerate(GeneratorDelegate.java:44)
+	at org.eclipse.xtext.generator.GeneratorDelegate.generate(GeneratorDelegate.java:35)
+	at org.eclipse.xtext.builder.BuilderParticipant.handleChangedContents(BuilderParticipant.java:597)
+	at org.eclipse.xtext.builder.BuilderParticipant.handleChangedContents(BuilderParticipant.java:578)
+	at org.eclipse.xtext.builder.BuilderParticipant.doGenerate(BuilderParticipant.java:563)
+	at org.eclipse.xtext.builder.BuilderParticipant.doBuild(BuilderParticipant.java:303)
+	at org.eclipse.xtext.builder.BuilderParticipant.build(BuilderParticipant.java:265)
+	at org.eclipse.xtext.builder.impl.RegistryBuilderParticipant$DeferredBuilderParticipant.build(RegistryBuilderParticipant.java:164)
+	at org.eclipse.xtext.builder.impl.RegistryBuilderParticipant.build(RegistryBuilderParticipant.java:70)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.doBuild(XtextBuilder.java:519)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.addInfosFromTaskAndBuild(XtextBuilder.java:449)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.incrementalBuild(XtextBuilder.java:430)
+	at org.eclipse.xtext.builder.impl.XtextBuilder.build(XtextBuilder.java:333)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:860)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:232)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:281)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:334)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:337)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:392)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:417)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:161)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:255)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
