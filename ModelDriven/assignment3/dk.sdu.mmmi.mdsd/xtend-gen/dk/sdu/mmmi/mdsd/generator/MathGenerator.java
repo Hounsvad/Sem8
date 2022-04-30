@@ -7,6 +7,7 @@ import com.google.common.collect.Iterators;
 import dk.sdu.mmmi.mdsd.math.Division;
 import dk.sdu.mmmi.mdsd.math.ExplicitNumber;
 import dk.sdu.mmmi.mdsd.math.External;
+import dk.sdu.mmmi.mdsd.math.ExternalUse;
 import dk.sdu.mmmi.mdsd.math.Local;
 import dk.sdu.mmmi.mdsd.math.Minus;
 import dk.sdu.mmmi.mdsd.math.Multiplication;
@@ -28,7 +29,6 @@ import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 import org.eclipse.xtext.xbase.lib.Conversions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 /**
  * Generates code from your model files on save.
@@ -44,6 +44,7 @@ public class MathGenerator extends AbstractGenerator {
     final Program program = Iterators.<Program>filter(resource.getAllContents(), Program.class).next();
     final String className = program.getProgramName().getName();
     final String math_expressionClass = this.getMathClass(program, className);
+    fsa.generateFile((className + ".java"), math_expressionClass);
   }
   
   public String getMathClass(final Program program, final String className) {
@@ -79,7 +80,7 @@ public class MathGenerator extends AbstractGenerator {
         _builder.newLineIfNotEmpty();
         _builder.append("\t");
         _builder.append("\t");
-        _builder.append("this.external = external");
+        _builder.append("this.external = external;");
         _builder.newLine();
         _builder.append("\t");
         _builder.append("}");
@@ -98,9 +99,15 @@ public class MathGenerator extends AbstractGenerator {
     _builder.append("\t");
     _builder.append("public void compute(){");
     _builder.newLine();
-    _builder.append("\t\t");
-    this.getVariableInstantiations(program);
-    _builder.newLineIfNotEmpty();
+    {
+      List<String> _variableInstantiations = this.getVariableInstantiations(program);
+      for(final String instantiation : _variableInstantiations) {
+        _builder.append("\t\t");
+        _builder.append(instantiation, "\t\t");
+        _builder.append(";");
+        _builder.newLineIfNotEmpty();
+      }
+    }
     _builder.append("\t");
     _builder.append("}");
     _builder.newLine();
@@ -109,18 +116,17 @@ public class MathGenerator extends AbstractGenerator {
     _builder.append("}");
     _builder.newLine();
     final String contents = _builder.toString();
-    InputOutput.<String>println(contents);
     return contents;
   }
   
-  public void getVariableInstantiations(final Program program) {
+  public List<String> getVariableInstantiations(final Program program) {
     EList<Variable> vars = program.getVariableAssignments();
-    List<String> computedVars = this.compute(vars);
+    return this.compute(vars);
   }
   
   public String getExternalInterface(final Program program) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("interface External{");
+    _builder.append("public interface External{");
     _builder.newLine();
     {
       EList<External> _externals = program.getExternals();
@@ -129,6 +135,7 @@ public class MathGenerator extends AbstractGenerator {
         _builder.append("public int ");
         String _externalSignature = this.getExternalSignature(external);
         _builder.append(_externalSignature, "\t");
+        _builder.append(";");
         _builder.newLineIfNotEmpty();
       }
     }
@@ -190,7 +197,11 @@ public class MathGenerator extends AbstractGenerator {
   public List<String> compute(final EList<Variable> variables) {
     ArrayList<String> values = new ArrayList<String>();
     for (final Variable varass : variables) {
-      values.add(MathGenerator.ComputeExp(varass));
+      String _name = varass.getName();
+      String _plus = (_name + " = ");
+      String _ComputeExp = MathGenerator.ComputeExp(varass);
+      String _plus_1 = (_plus + _ComputeExp);
+      values.add(_plus_1);
     }
     return values;
   }
@@ -245,10 +256,8 @@ public class MathGenerator extends AbstractGenerator {
   
   protected static String _ComputeExp(final ExplicitNumber exp) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("(");
     int _value = exp.getValue();
     _builder.append(_value);
-    _builder.append(")");
     return _builder.toString();
   }
   
@@ -288,6 +297,22 @@ public class MathGenerator extends AbstractGenerator {
     return _builder.toString();
   }
   
+  protected static String _ComputeExp(final ExternalUse exp) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("(external.").append(exp.getRef().getName()).append("(");
+    int _length = ((Object[])Conversions.unwrapArray(exp.getRef().getParameters(), Object.class)).length;
+    switch (_length) {
+      case 1:
+        sb.append(MathGenerator.ComputeExp(exp.getExp().get(0)));
+        break;
+      case 2:
+        sb.append(MathGenerator.ComputeExp(exp.getExp().get(0))).append(",").append(MathGenerator.ComputeExp(exp.getExp().get(1)));
+        break;
+    }
+    sb.append("))");
+    return sb.toString();
+  }
+  
   public static String ComputeExp(final EObject exp) {
     if (exp instanceof Local) {
       return _ComputeExp((Local)exp);
@@ -297,6 +322,8 @@ public class MathGenerator extends AbstractGenerator {
       return _ComputeExp((Division)exp);
     } else if (exp instanceof ExplicitNumber) {
       return _ComputeExp((ExplicitNumber)exp);
+    } else if (exp instanceof ExternalUse) {
+      return _ComputeExp((ExternalUse)exp);
     } else if (exp instanceof Minus) {
       return _ComputeExp((Minus)exp);
     } else if (exp instanceof Multiplication) {

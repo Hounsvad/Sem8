@@ -24,6 +24,7 @@ import dk.sdu.mmmi.mdsd.math.Local
 import dk.sdu.mmmi.mdsd.math.Program
 import org.eclipse.emf.common.util.EList
 import dk.sdu.mmmi.mdsd.math.External
+import dk.sdu.mmmi.mdsd.math.ExternalUse
 import java.util.ArrayList
 import java.util.List
 
@@ -40,8 +41,8 @@ class MathGenerator extends AbstractGenerator {
 		val program = resource.allContents.filter(Program).next
 		val className = program.programName.name
 		// Append Header to class
-		val math_expressionClass = getMathClass(program, className);
-
+		val math_expressionClass = getMathClass(program, className)
+		fsa.generateFile(className + ".java", math_expressionClass)
 	}
 
 	def getMathClass(Program program, String className) {
@@ -55,32 +56,34 @@ class MathGenerator extends AbstractGenerator {
 					private External external;
 					
 					public «className»(External external){
-						this.external = external
+						this.external = external;
 					}
 						
 					«getExternalInterface(program)»
 				«ENDIF»
 				
 				public void compute(){
-					«getVariableInstantiations(program)»
+					«FOR instantiation : getVariableInstantiations(program)»
+						«instantiation»;
+					«ENDFOR»
 				}
 				
 			}
 		'''
-		println(contents)
+		//println(contents)
 		return contents
 	}
 	
 	def getVariableInstantiations(Program program){
 		var vars = program.variableAssignments
-		var computedVars = vars.compute() 
+		return vars.compute()
 	}
 	
 	def getExternalInterface(Program program) {
 		return '''
-			interface External{
+			public interface External{
 				«FOR external : program.externals»
-					public int «getExternalSignature(external)»
+					public int «getExternalSignature(external)»;
 				«ENDFOR»
 			}
 		'''
@@ -120,7 +123,7 @@ class MathGenerator extends AbstractGenerator {
 		var values = new ArrayList<String>();
 		
 		for (varass : variables) {
-			values.add(ComputeExp(varass))
+			values.add(varass.name + " = " + ComputeExp(varass))
 		}
 		return values
 	}
@@ -147,7 +150,7 @@ class MathGenerator extends AbstractGenerator {
 
 	// ExplicitNumber
 	def static dispatch String ComputeExp(ExplicitNumber exp) {
-		return '''(«exp.value»)'''
+		return '''«exp.value»'''
 	}
 
 	// Parenthesis
@@ -168,5 +171,16 @@ class MathGenerator extends AbstractGenerator {
 	// Variable
 	def static dispatch String ComputeExp(Variable exp) {
 		return '''(«exp.exp.ComputeExp()»)'''
+	}
+	
+	def static dispatch String ComputeExp(ExternalUse exp) {
+		var sb = new StringBuilder()
+		sb.append("(external.").append(exp.ref.name).append("(")
+		switch exp.ref.parameters.length(){
+			case 1: sb.append(ComputeExp(exp.exp.get(0)))
+			case 2: sb.append(ComputeExp(exp.exp.get(0))).append(",").append(ComputeExp(exp.exp.get(1)))
+		}
+		sb.append("))")
+		return sb.toString()
 	}
 }
