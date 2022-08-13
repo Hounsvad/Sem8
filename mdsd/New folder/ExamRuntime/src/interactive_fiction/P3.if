@@ -1,0 +1,14 @@
+story FalseInteraction
+scenario Freewill {
+    announce Start "Now, I want you to 'interact'"
+        to S1
+    question S1 "Please, just type anything you want" as text
+        to S2
+    question S2 "Now, answer me, what is your favorite number?" as number
+        to S3
+    announce S3 "Yes! Now you are interacting. This is fun! isn't it?"
+        to S4
+    question S4 "Probably, that is not the best question... maybe you should ask yourself if it makes a story interactive if your questions are not going to be taken into consideration, what do you think?" as text
+        to End
+    end End "Yes, exactly... I think you are right. Or you may not. Who knows, I probably did not read your answer either"
+}

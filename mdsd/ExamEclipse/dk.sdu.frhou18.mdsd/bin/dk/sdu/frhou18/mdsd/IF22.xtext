@@ -1,0 +1,123 @@
+grammar dk.sdu.frhou18.mdsd.IF22 with org.eclipse.xtext.common.Terminals
+
+generate iF22 "http://www.sdu.dk/frhou18/mdsd/IF22"
+
+Model:
+	storyName = Story functions+=Function* scenarios+=Scenario+
+;
+
+Function:
+	'function' name=ID '(' (parameters+=TypeUsage (',' parameters+=TypeUsage)*)? ')' ':' type = Type
+;
+
+
+
+Story:
+	'story' name=ID 
+;
+
+Scenario:
+	'scenario' name=ID '{' variables+=VariableDef* statemens+=Statement* '}'
+;
+
+Statement:
+	End | Announce | Question
+;
+
+End:
+	'end' name=ID endMessage=LogicExp
+;
+
+Announce:
+	'announce' name=ID text=LogicExp target=Target
+;
+
+Question:
+	'question' name=ID text=LogicExp 'as' asValue=LogicExp ('in' inVar=VarUse)? targets+=Target+
+;
+
+VariableDef:
+	'var' name=ID ':' type=Type
+;
+
+enum Type:
+	boolean | text | number 
+;
+
+Target:
+	'to' target=[TargetTarget] ('if' logic=LogicExp)?
+;
+
+TargetTarget:
+	Scenario | Statement
+;
+
+StringProducer:
+	TextExp
+;
+
+This returns Expression:
+	{This} 'this'
+;
+
+LogicExp returns Expression:
+	LogicAndOR (('==' {Equals.left=current}| '!=' {NotEquals.left=current}| '<' {Less.left=current}| '>' {Greater.left=current}| '<=' {LessOrEquals.left=current}| '>='{GreaterOrEquals.left=current})  right=LogicAndOR)*
+;
+
+LogicAndOR returns Expression:
+	MathExp (('&&' {And.left=current}|'||' {Or.left=current}) right=MathExp)*
+;
+
+LogicNot returns Expression:
+	{LogicNot} '!' ref = Primary
+;
+
+Parentheses returns Expression:
+	{Parentheses} '(' ref=LogicExp ')'
+;
+
+Boolean returns Expression:
+	 {Boolean} val=BooleanValue	
+;
+
+enum BooleanValue:
+	TRUE='true' | FALSE='false'
+;
+
+//Potentially no parenthesese in maths, java is gut boi
+
+MathExp returns Expression:
+	MultDivMathExp (('+' {Plus.left=current} | '-' {Minus.left=current}) right = MultDivMathExp)*
+;
+
+MultDivMathExp returns Expression:
+	TextExp (('*' {Multiplication.left=current}| '/' {Division.left=current}) right=TextExp)*
+;
+
+MathNumberExp returns Expression:
+	{MathNumberExp} value=INT
+;
+
+TextExp returns Expression:
+	Primary (('&' {TextExp.left=current}) right=Primary)*//{TextExp} stringValues += Primary ('&' stringValues+=Primary)*
+;
+
+Primary returns Expression:
+	FunctionUsage | LogicNot | Boolean | Parentheses | This | MathNumberExp | TextLiteral | VarUse | TypeUsage
+;
+
+FunctionUsage returns Expression:
+	{FunctionUsage} name=[Function] '(' exps+=LogicExp (',' exps+=LogicExp)* ')'
+;
+
+TextLiteral returns Expression:
+	{TextLiteral} text=STRING
+;
+
+VarUse returns Expression:
+	{VarUse} ref=[VariableDef]
+;
+
+TypeUsage returns Expression:
+	{TypeUsage} type=Type
+;

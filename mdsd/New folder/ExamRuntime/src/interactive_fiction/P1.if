@@ -1,0 +1,4 @@
+story ShortStory
+scenario Simple {
+	end End "This is the ending for a very short story"
+}

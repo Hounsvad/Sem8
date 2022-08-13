@@ -1,0 +1,41 @@
+story Remember
+scenario AskingData {
+    var name : text
+    var favNumber : number
+    announce Start "I have a confession to make"
+        to Confession
+    announce Confession "In our previous game, you chose your own path, but..."
+        to Forget
+    announce Forget "But I totally forget your answers. I am sorry, my memory has never been so good"
+        to Improving
+    announce Improving "I am trying to improve, I will do better, I promise!"
+        to AskName
+    question AskName "Look, I am going to prove it to you. Just let me know what your name is" as text in name
+        to RepeatName
+    announce RepeatName "So, your name is "&name&". I told you I would remember it!"
+        to AskNumber
+    question AskNumber "Now, your favorite number is?" as number in favNumber
+        to NumberZero if favNumber == 0
+        to NumberNegative if favNumber < 0
+        to NumberPositive if favNumber > 0
+    announce NumberZero "0... Zero... Nul... such a problematic number, but I will make this work... somehow"
+        to MathOperation
+    announce NumberNegative "A negative person... do not worry, we still will have fun!"
+        to MathOperation
+    announce NumberPositive "I like positive numbers too. I think they are so much fun, and I can think of so many ways to have fun"
+        to MathOperation
+
+    question MathOperation "I want to add a number to your favorite number. How much should we add to it?" as number
+        to BigNumber if this + favNumber > 100
+        to PositiveAdd if this > 0
+        to NegativeAdd
+
+    announce BigNumber "We ended up with a very big number, eh? I like it. This will be my favorite number"
+        to End
+
+    announce PositiveAdd "I kind of like this new number. I will make it my favorite number from now on"
+        to End
+    announce NegativeAdd "Oh, we did not even get a positive number. Well, what can we do, right? Sometimes life does not give you what you want..."
+        to End
+    end End "This was so much fun, "&name&" (yes, I did this so you can know that I still remember your name). I hope we can play soon!"
+}

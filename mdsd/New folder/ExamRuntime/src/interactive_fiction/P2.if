@@ -1,0 +1,16 @@
+story Book
+scenario Linear {
+    announce A1 "Some stories can be longer"
+        to A2
+    announce A2 "But that does not mean they would be better"
+        to A3
+    announce A3 "Our goal is for you to choose a path"
+        to A4
+    announce A4 "But here, there is no path..."
+        to A5
+    announce A5 "If no path can be chosen, can this still be called 'interactive'?"
+        to A6
+    announce A6 "Probably not, but then again, that does not mean this is a bad story"
+        to End
+    end End "You would not call a book 'bad' because you cannot choose how to read it, right?"
+}

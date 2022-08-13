@@ -1,0 +1,20 @@
+story FirstInteraction
+scenario AlternatePaths {
+    announce Start "So, you really want to interact..."
+        to S1
+    question S1 "This is interesting, so, tell me, is it fun to interact with me?" as text
+        to YesAnswer if this == "yes"
+        to NoAnswer if this == "no"
+        to WrongAnswerEnd
+    announce YesAnswer "I am glad you find this fun. I do like to spend time here"
+        to NumberQuestion
+    announce NoAnswer "Oh no, I am sorry you are stuck with me but believe me, it will get fun!"
+        to NumberQuestion
+    question NumberQuestion "Now, I really want to know your favorite number, which is?" as number
+        to PositiveAnswer if this > 0
+        to NegativeAnswer if this <= 0
+
+    end PositiveAnswer "So we have a positive person here, good to know. I hope your next game will be as fun as this one"
+    end NegativeAnswer "Really? Do you try to be smart, or do you really like a number like that? We are going to have so much fun from now on..."
+    end WrongAnswerEnd "Oh, so you like to play outside the rules? Well, I do not like how you play..."
+}

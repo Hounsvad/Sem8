@@ -1,0 +1,62 @@
+story LongStory
+
+function textLength(text) : number
+function isEven(number) : boolean
+function absolute(number) : number
+
+scenario MultiplePath2 {
+    var name : text
+    announce Start "This will be our last game, and I do not want to forget you, my friend, ever again"
+        to AskName
+    question AskName "Can you tell me your name again?" as text in name
+        to AfterName
+    announce AfterName "Thank you again, "&name
+        to AskNumber
+    question AskNumber "I want a number again. It can be anything you like (or dislike if you are that kind of person)" as number
+        to PositiveScenario(name, this) if this > 0 {
+            on Ending to Ending
+        }
+        to NegativeScenario(name) if this <= 0 {
+            on Ending to Ending
+        }
+    
+    end Ending "I am glad to be able to play with you, "&name&"! I hope we can do this again in the future"
+}
+
+scenario PositiveScenario(name: text, num : number) {
+    announce Start "With this number I can actually check something myself, for example"
+        to EvenNumber if isEven(num)
+        to OddNumber
+
+    announce EvenNumber "You choose an even number! And wait! I can do more!"
+        to SameLength if textLength(name) == num
+        to DifferentLength
+
+    announce OddNumber "You choose an odd number! And wait! I can do more!"
+        to SameLength if textLength(name) == num
+        to DifferentLength
+
+    announce SameLength "The number you gave me is actually the length of your name!"
+        to Ending
+    announce DifferentLength "The difference between the length of your name and the number you gave me is "&absolute(textLength(name) - num)&". I am amazing, am I?"
+        to Ending
+
+    end Ending
+}
+
+scenario NegativeScenario(name : text) {
+    announce Start "A negative number again, at least the amount of letters in your name is a positive number..."
+        to AskLength
+
+    question AskLength "I think the size of your name is "&textLength(name)&", am I right?" as text
+        to AnswerYes if this == "yes"
+        to AnswerNo
+
+    announce AnswerYes "Well, if I know the answer is thanks to you!"
+        to Ending
+
+    announce AnswerNo "Oh really? I hope this is my mistake, but deep down, I think it may be yours..."
+        to Ending
+
+    end Ending
+}

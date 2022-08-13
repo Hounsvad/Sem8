@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: dk.sdu.frhou18.mdsd
+Bundle-ManifestVersion: 2
+Bundle-Name: dk.sdu.frhou18.mdsd
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: dk.sdu.frhou18.mdsd; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.eclipse.xtend.lib;bundle-version="2.14.0",
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: dk.sdu.frhou18.mdsd.validation,
+ dk.sdu.frhou18.mdsd.scoping,
+ dk.sdu.frhou18.mdsd.iF22.impl,
+ dk.sdu.frhou18.mdsd,
+ dk.sdu.frhou18.mdsd.services,
+ dk.sdu.frhou18.mdsd.generator,
+ dk.sdu.frhou18.mdsd.iF22,
+ dk.sdu.frhou18.mdsd.iF22.util,
+ dk.sdu.frhou18.mdsd.serializer,
+ dk.sdu.frhou18.mdsd.parser.antlr,
+ dk.sdu.frhou18.mdsd.parser.antlr.internal
+Import-Package: org.apache.log4j

@@ -1,0 +1,12 @@
+story ValidateInput
+scenario Validation {
+    var name : text
+    var favNumber : number
+    announce Start "Hi again! This is going to be a short game, as I am just testing something out"
+        to Promise
+    announce Promise "I promise this will be worthy for a future game"
+        to AskNumber
+    question AskNumber "What was your favorite number?" as number > 0
+        to End
+    end End "I am sorry if you like negative numbers more, but positive numbers are going to give us a much better experience"
+}

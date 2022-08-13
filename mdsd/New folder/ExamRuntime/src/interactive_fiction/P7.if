@@ -1,0 +1,22 @@
+story ExternalHelp
+function isEven(number) : boolean
+function isFavorite(text) : boolean
+function textLength(text) : number
+scenario ExternalHelp {
+    var favThing : text
+    announce Start "This time, you have to work a bit more before we can play, I hope you did your homework!"
+        to AskNumber
+    question AskNumber "Can you tell me your number again? (as you can notice, I forget easily)" as number > 0
+        to EvenNumber if isEven(this)
+        to OddNumber
+    announce EvenNumber "See? now I can know that your number is even!"
+        to AskFavorite
+    announce OddNumber "Now I can know a lot of cool stuff, like that your number is odd"
+        to AskFavorite
+    question AskFavorite "I will show you more! For this, just let me know one of your favorite things (yes, like the song, but only one!)" as isFavorite(text) in favThing
+        to LongText if textLength(favThing) > 0
+        to ShowOff
+    announce LongText "Oh, that is why you took so long, that is a long name for a thing..."
+        to ShowOff
+    end ShowOff "Cool! so one of your favorite things is "&favThing&". You have a refined taste"
+}

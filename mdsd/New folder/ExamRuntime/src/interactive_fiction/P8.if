@@ -1,0 +1,37 @@
+story MultipleScenarios
+scenario MultiplePath {
+    var favThing : text
+    announce Start "Finally, we are going to stick together for a long time"
+        to AskNumber
+    question AskNumber "To start, you have to give me a number (it does not need to be your favorite number this time)" as number
+        to PositiveScenario if this > 0 {
+            on YesEnding to End1
+            on NoEnding to End2
+        }
+        to NegativeScenario if this <= 0 {
+            on Ending to End3
+        }
+    
+    end End1 "This was fun. Next time, I will remember better!"
+    end End2 "Next time, we will have more fun!"
+    end End3 "I hope you like the next game..."
+}
+
+scenario PositiveScenario {
+    announce Start "So you are choosing positive numbers this time"
+        to Question
+
+    question Question "Are you doing this for me, or do you like positive numbers?" as text
+        to YesEnding if this == 'yes'
+        to NoEnding 
+
+    end YesEnding
+    end NoEnding
+}
+
+scenario NegativeScenario {
+    announce Start "Is this for real, or are you just trying to see the answer for every possible path?"
+        to Ending
+
+    end Ending "Oh well, this is up to you, I guess"
+}

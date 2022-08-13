@@ -1,0 +1,3 @@
+C:/Users/frede/Programming/Sem8/IOT/C-Intro/cmake-build-debug/CMakeFiles/C_Intro.dir
+C:/Users/frede/Programming/Sem8/IOT/C-Intro/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/frede/Programming/Sem8/IOT/C-Intro/cmake-build-debug/CMakeFiles/rebuild_cache.dir

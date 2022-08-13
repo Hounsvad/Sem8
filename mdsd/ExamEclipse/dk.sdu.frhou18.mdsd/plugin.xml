@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+	<extension point="org.eclipse.emf.ecore.generated_package">
+		<package
+			uri = "http://www.sdu.dk/frhou18/mdsd/IF22"
+			class = "dk.sdu.frhou18.mdsd.iF22.IF22Package"
+			genModel = "model/generated/IF22.genmodel" />
+	</extension>
+</plugin>
